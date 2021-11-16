@@ -1,0 +1,65 @@
+Folder PATH listing
+Volume serial number is 4234-A4AC
+G:.
+|   App.vue
+|   main.js
+|   tree.txt
+|   
++---assets
+|   |   logo.png
+|   |   
+|   \---img
+|           404.gif
+|           create-account-office-dark.jpeg
+|           create-account-office.jpeg
+|           dashboard.png
+|           forgot-password-office-dark.jpeg
+|           forgot-password-office.jpeg
+|           github.svg
+|           img-about.png
+|           img-banner.png
+|           img-work-1.jpg
+|           img-work-2.jpg
+|           img-work-3.jpg
+|           img-work-4.jpg
+|           login-office-dark.jpeg
+|           login-office.jpeg
+|           logo-main.png
+|           logo-vue.png
+|           twitter.svg
+|           
++---components
+|   +---backend
+|   |       Navbar.vue
+|   |       Sidebar.vue
+|   |       
+|   \---frontend
+|           Foot.vue
+|           Nav.vue
+|           
++---layouts
+|       Backend.vue
+|       Frontend.vue
+|       
++---router
+|       index.js
+|       
++---store
+|       index.js
+|       
++---styles
+|       tailwind.css
+|       
+\---views
+    +---backend
+    \---frontend
+            About.vue
+            Contact.vue
+            ForgotPassword.vue
+            Home.vue
+            Login.vue
+            NotFound404.vue
+            Portfolio.vue
+            Register.vue
+            Service.vue
+            
