@@ -12,7 +12,7 @@
                 <span class="block w-6 my-1 border-b-2 border-current"></span>
             </button>
             <div class="hidden w-full ml-auto lg:block lg:w-auto">
-                <router-link to="/" class="block text-xl px-4 py-2 font-medium hover:text-indigo-900 lg:inline-block">หน้าหลัก</router-link>
+                <router-link to="/" class="block text-xl px-4 py-2 font-medium hover:text-indigo-900 lg:inline-block">หน้าหลัก ({{ this.$store.state.counter }})</router-link>
                 <router-link to="/about" class="block text-xl px-4 py-2 font-medium hover:text-indigo-900 lg:inline-block">เกี่ยวกับเรา</router-link>
                 <router-link to="/portfolio" class="block text-xl px-4 py-2 font-medium hover:text-indigo-900 lg:inline-block">ผลงาน</router-link>
                 <router-link to="/service" class="block text-xl px-4 py-2 font-medium hover:text-indigo-900 lg:inline-block">บริการ</router-link>

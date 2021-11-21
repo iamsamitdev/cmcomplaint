@@ -17,7 +17,7 @@
                     </div>
                 </div>
                 <div class="w-full p-4 xl:w-2/12 sm:w-4/12">
-                    <h4 class="mb-8 text-lg font-medium text-gray-400 uppercase">About</h4>
+                    <h4 class="mb-8 text-lg font-medium text-gray-400 uppercase">About ({{ this.$store.state.counter }})</h4>
                     <ul>
                         <li class="mb-4">
                             <a href="#" class="hover:text-indigo-200">Get Quote</a>

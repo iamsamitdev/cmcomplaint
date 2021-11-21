@@ -21,25 +21,49 @@
 
               <h1 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">สมัครสมาชิกใหม่</h1>
 
-              <form>
+              <form @submit.prevent="onSubmit">
 
                 <label class="block text-gray-700 text-sm mb-2" for="fullname">ชื่อ-สกุล</label>
-                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight" id="fullname" type="text">
+                <input v-model="fullname" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight" id="fullname" type="text">
+                
+                <div v-if="v$.fullname.$error" class="mt-2 text-sm text-red-500">
+                  {{ v$.fullname.$errors[0].$message }}
+                </div>
 
                 <label class="block text-gray-700 text-sm mt-3 mb-2" for="username">ชื่อผู้ใช้</label>
-                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight" id="username" type="text">
+                <input v-model="username" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight" id="username" type="text">
+
+                <div v-if="v$.username.$error" class="mt-2 text-sm text-red-500">
+                  {{ v$.username.$errors[0].$message }}
+                </div>
 
                 <label class="block text-gray-700 text-sm mt-3 mb-2" for="mobile">เบอร์โทรศัพท์</label>
-                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight" id="mobile" type="text">
+                <input v-model="mobile" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight" id="mobile" type="text">
+
+                <div v-if="v$.mobile.$error" class="mt-2 text-sm text-red-500">
+                  {{ v$.mobile.$errors[0].$message }}
+                </div>
 
                 <label class="block text-gray-700 text-sm mt-3 mb-2" for="email">อีเมล์</label>
-                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight" id="email" type="text" autocomplete="email">
+                <input v-model="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight" id="email" type="text" autocomplete="email">
+
+                <div v-if="v$.email.$error" class="mt-2 text-sm text-red-500">
+                  {{ v$.email.$errors[0].$message }}
+                </div>
 
                 <label class="block text-gray-700 text-sm mt-3 mb-2" for="password">รหัสผ่าน</label>
-                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight" id="password" type="password" autocomplete="current-password">
+                <input v-model="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight" id="password" type="password" autocomplete="current-password">
+
+                <div v-if="v$.password.$error" class="mt-2 text-sm text-red-500">
+                  {{ v$.password.$errors[0].$message }}
+                </div>
 
                 <label class="block text-gray-700 text-sm mt-3 mb-2" for="confirm_password">ยืนยันรหัสผ่าน</label>
-                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight" id="confirm_password" type="password" autocomplete="current-password">
+                <input v-model="confirm_password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight" id="confirm_password" type="password" autocomplete="current-password">
+
+                <div v-if="v$.confirm_password.$error" class="mt-2 text-sm text-red-500">
+                  {{ v$.confirm_password.$errors[0].$message }}
+                </div>
 
                 <p class="my-4"></p>
 
@@ -49,7 +73,7 @@
                   </span>
                 </label>
                 
-                <input type="button"
+                <input @click="submitForm" type="button"
                     class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg cursor-pointer active:bg-purple-600 hover:bg-purple-700" value="สมัครสมาชิก">
               </form>
 
@@ -92,11 +116,96 @@
 </template>
 
 <script>
+    import useValidate from '@vuelidate/core'
+    import { required, email, minLength, helpers } from '@vuelidate/validators';
+
+    import http from '@/services/AuthService'
+
     export default {
-        
+        data(){
+          return {
+            v$: useValidate(),
+            fullname: '',
+            username: '',
+            mobile: '',
+            email: '',
+            password: '',
+            confirm_password: ''
+          }
+        },
+        methods:{
+          submitForm(){
+            // alert('OK')
+            this.v$.$validate() // เช็คฟอร์มทั้งหมด
+            if(!this.v$.$error){
+              // validate ผ่าน
+              // alert('validate success')
+              
+              // เรียกใช้งาน API Login
+              http.post('register',
+                {
+                    "fullname": this.fullname,
+                    "username": this.username,
+                    "email": this.email,
+                    "password": this.password,
+                    "password_confirmation": this.confirm_password,
+                    "tel": this.mobile,
+                    "role": 1
+                }
+              ).then(response => {
+                console.log(response)
+                
+                // เก็บข้อมูล user ลง localStorage
+                localStorage.setItem('user', JSON.stringify(response.data))
+
+                // Redirect ไปหน้า Dashboard
+                this.$router.push({ name:'Dashboard'})
+              })
+
+            }else{
+              // alert('Form validate fail!')
+            }
+          }
+        },
+
+        validations(){
+          return {
+            fullname: {
+              required: helpers.withMessage('ป้อนชื่อ-สกุลก่อน', required)
+            },
+            username: {
+              required: helpers.withMessage('ป้อนชื่อผู้ใช้ก่อน', required)
+            },
+            mobile: {
+              required: helpers.withMessage('ป้อนเบอร์โทรศัพท์ก่อน', required)
+            },
+            email: {
+              required: helpers.withMessage('ป้อนอีเมล์ก่อน', required),
+              email: helpers.withMessage('รูปแบบอีเมล์ที่ป้อนไม่ถูกต้อง', email),
+            },
+            password: {
+              required: helpers.withMessage('ป้อนรหัสผ่านก่อน', required),
+              minLength : helpers.withMessage(
+              ({
+                $params
+                }) => `รหัสผ่านต้องไม่น้อยกว่า ${$params.min} ตัวอักษร`, 
+                minLength(6)
+              )
+            },
+            confirm_password: {
+              required: helpers.withMessage('ป้อนรหัสผ่านอีกครั้ง', required),
+              minLength : helpers.withMessage(
+              ({
+                $params
+                }) => `ยืนยันรหัสผ่านต้องไม่น้อยกว่า ${$params.min} ตัวอักษร`, 
+                minLength(6)
+              )
+            }
+          }
+        }
     }
 </script>
 
-<style lang="scss" scoped>
+<style lang="css" scoped>
 
 </style>
